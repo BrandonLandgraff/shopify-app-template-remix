@@ -39,11 +39,12 @@ function Extension() {
         )?.value;
 
         if (parentCartId) {
-          const matchingChild = childLines.find((line) =>
+          const matchingChildren = childLines.filter((line) =>
             line.attributes.some(
               (attr) => attr.key === "_mws_cart" && attr.value === parentCartId
             )
           );
+          const matchingChild = matchingChildren[matchingChildren.length - 1];
 
           if (matchingChild) {
             const childAttrKeys = new Set(matchingChild.attributes.map((a) => a.key));
@@ -79,7 +80,7 @@ function Extension() {
           Product {entry.target.id}: {entry.metafield.value}
         </s-text>
       ))}
-      {lines.map((line) => (
+      {[...lines].reverse().map((line) => (
         <s-stack key={line.id} gap="tight">
           <s-text>— {line.merchandise.product.title} (${line.cost.totalAmount.amount})</s-text>
           {line.attributes.map((attr, i) => (
